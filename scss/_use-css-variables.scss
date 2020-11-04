@@ -1,0 +1,160 @@
+@function lighten($var1, $var2) {
+  $var1string: quote($var1);
+
+  @if (str-index($string: $var1string, $substring: "var(--") == 1) {
+    $color-var: unquote(str-slice($var1string, 5, str-length($var1string) - 1));
+    @return hsl(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) + #{$var2}));
+  }
+
+  @return var1;
+}
+
+@function darken($var1, $var2) {
+  $var1string: quote($var1);
+
+  @if (str-index($string: $var1string, $substring: "var(--") == 1) {
+    $color-var: unquote(str-slice($var1string, 5, str-length($var1string) - 1));
+    @return hsl(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) - #{$var2}));
+  }
+
+  @return var1;
+}
+
+@function fade-in($var1, $var2) {
+  @return $var1;
+}
+
+@function mix($var1, $var2, $var3) {
+  @return $var1;
+}
+
+@function red($var1) {
+  @return 255;
+}
+
+@function green($var1) {
+  @return 0;
+}
+
+@function blue($var1) {
+  @return 255;
+}
+
+$white:    hsl(0, 0%, 100%);
+$gray-100: hsl(210, 17%, 98%);
+$gray-200: hsl(210, 16%, 93%);
+$gray-300: hsl(210, 14%, 89%);
+$gray-400: hsl(210, 14%, 83%);
+$gray-500: hsl(210, 11%, 71%);
+$gray-600: hsl(208, 7%, 46%);
+$gray-700: hsl(210, 9%, 31%);
+$gray-800: hsl(210, 10%, 23%);
+$gray-900: hsl(210, 11%, 15%);
+$black:    hsl(0, 0%, 0%);
+
+$blue:    hsl(211, 100%, 50%);
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #e83e8c;
+$red:     #dc3545;
+$orange:  #fd7e14;
+$yellow:  #ffc107;
+$green:   #28a745;
+$teal:    #20c997;
+$cyan:    #17a2b8;
+
+body{
+  --white-h: 0;
+  --white-s: 0%;
+  --white-l: 100%;
+  --white: hsl(var(--white-h), var(--white-s), var(--white-l));
+
+  --gray-100-h: 210;
+  --gray-100-s: 17%;
+  --gray-100-l: 98%;
+  --gray-100: hsl(var(--gray-100-h), var(--gray-100-s), var(--gray-100-l));
+
+  --gray-200-h: 210;
+  --gray-200-s: 16%;
+  --gray-200-l: 93%;
+  --gray-200: hsl(var(--gray-200-h), var(--gray-200-s), var(--gray-200-l));
+
+  --gray-300-h: 210;
+  --gray-300-s: 14%;
+  --gray-300-l: 89%;
+  --gray-300: hsl(var(--gray-300-h), var(--gray-300-s), var(--gray-300-l));
+
+  --gray-400-h: 210;
+  --gray-400-s: 14%;
+  --gray-400-l: 83%;
+  --gray-400: hsl(var(--gray-400-h), var(--gray-400-s), var(--gray-400-l));
+
+  --gray-500-h: 210;
+  --gray-500-s: 11%;
+  --gray-500-l: 71%;
+  --gray-500: hsl(var(--gray-500-h), var(--gray-500-s), var(--gray-500-l));
+
+  --gray-600-h: 208;
+  --gray-600-s: 7%;
+  --gray-600-l: 46%;
+  --gray-600: hsl(var(--gray-600-h), var(--gray-600-s), var(--gray-600-l));
+
+  --gray-700-h: 210;
+  --gray-700-s: 9%;
+  --gray-700-l: 31%;
+  --gray-700: hsl(var(--gray-700-h), var(--gray-700-s), var(--gray-700-l));
+
+  --gray-800-h: 210;
+  --gray-800-s: 10%;
+  --gray-800-l: 23%;
+  --gray-800: hsl(var(--gray-800-h), var(--gray-800-s), var(--gray-800-l));
+
+  --gray-900-h: 210;
+  --gray-900-s: 11%;
+  --gray-900-l: 15%;
+  --gray-900: hsl(var(--gray-900-h), var(--gray-900-s), var(--gray-900-l));
+
+  --black-h: 0;
+  --black-s: 0%;
+  --black-l: 0%;
+  --black: hsl(var(--black-h), var(--black-s), var(--black-l));
+
+  --blue-h: 211;
+  --blue-s: 100%;
+  --blue-l: 50%;
+  --blue: hsl(var(--blue-h), var(--blue-s), var(--blue-l));
+}
+
+body.dark {
+  --white: #{$black};
+  --gray-100: #{$gray-900};
+  --gray-200: #{$gray-800};
+  --gray-300: #{$gray-700};
+  --gray-400: #{$gray-600};
+  --gray-500: #{$gray-500};
+  --gray-600: #{$gray-400};
+  --gray-700: #{$gray-300};
+  --gray-800: #{$gray-200};
+  --gray-900: #{$gray-100};
+  
+  --black-l: 100%;
+
+  --blue-l: 70%;
+}
+
+$white: var(--white);
+$gray-100: var(--gray-100);
+$gray-200: var(--gray-200);
+$gray-300: var(--gray-300);
+$gray-400: var(--gray-400);
+$gray-500: var(--gray-500);
+$gray-600: var(--gray-600);
+$gray-700: var(--gray-700);
+$gray-800: var(--gray-800);
+$gray-900: var(--gray-900);
+$black: var(--black);
+
+$blue: var(--blue);
+
+$card-border-color: hsla(var(--black-h), var(--black-s), var(--blue-l), .125);
+$card-cap-bg: hsla(var(--black-h), var(--black-s), var(--blue-l), .03);
