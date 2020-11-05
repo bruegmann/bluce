@@ -1,30 +1,11 @@
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/98681/84929378-99291700-b084-11ea-89db-8b5ad75d9258.png" width="300" height="175" alt="Bootstrap npm logo">
-</p>
-
-<h3 align="center">Bootstrap npm starter template</h3>
-
-<p align="center">Create new Bootstrap-powered npm projects in no time.</p>
+# Bluce - Customize Bootstrap with CSS Variables!
 
 ## About
 
-`bootstrap-npm-starter` is a GitHub template repository for creating new Bootstrap-powered npm projects, maintained by Bootstrap co-author @mdo. You can also use it as your own Bootstrap prototyping sandbox. It's built with Bootstrap v4 with plans to update for v5.
+You can already customize Bootstrap. But only at build time. Having multiple themes (like dark and light theme) is pretty difficult this way.\
+With Bluce you can use CSS Variables to change color settings.
 
-[![Build Status](https://github.com/twbs/bootstrap-npm-starter/workflows/CI/badge.svg)](https://github.com/twbs/bootstrap-npm-starter/actions)
-
-## Repo template
-
-Setup as a starter template, you can easily generate a new GitHub repository. From the repository homepage, click the `Use this template` button.
-
-## What's included
-
-- Single HTML page (`index.html`) to demonstrate how to include Bootstrap.
-- Includes Bootstrap (currently using v4.5.0) source files via npm.
-- npm scripts (see `package.json`) for compiling and autoprefixing Sass, watching for changes, and starting a basic local server.
-- Example stylesheet (`scss/starter.scss`) highlighting two ways to include and customize Bootstrap.
-- Example JavaScript file (`assets/js/starter.js`) showing how to import all of Bootstrap, or just the parts you need.
-
-## Usage
+## Build
 
 Be sure to have [Node.js](https://nodejs.org/) installed before proceeding.
 
@@ -96,17 +77,3 @@ npm purgecss --css assets/css/starter.css --content index.html --output assets/c
 ```
 
 PurgeCSS is a PostCSS plugin and [can be configured](https://purgecss.com/configuration.html) to your exact needs with a little extra effort, including additional [command line options](https://purgecss.com/CLI.html).
-
-## Actions CI
-
-We've included some simple GitHub Actions in this template repo. When you generate your new project from here, you'll have the same tests that run whenever a pull request is created. We've included Actions for the following:
-
-- Stylelint for your CSS
-
-When your repository is generated, you won't see anything in the Actions tab until you create a new pull request. You can customize these Actions, add new ones, or remove them outright if you wish.
-
-[Learn more about GitHub Actions](https://github.com/features/actions), [read the Actions docs](https://help.github.com/en/actions), or [browse the Actions Marketplace](https://github.com/marketplace/actions).
-
-## Copyright
-
-&copy; @mdo 2020 and licensed MIT.
