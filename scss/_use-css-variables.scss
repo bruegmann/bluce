@@ -1,35 +1,117 @@
-@function lighten($var1, $var2) {
-  $var1string: quote($var1);
+@function str-remove-whitespace($str) {
+  @while (str-index($str, ' ') != null) {
+    $index: str-index($str, ' ');
+    $str: "#{str-slice($str, 0, $index - 1)}#{str-slice($str, $index + 1)}";
+  }
+  @return $str;
+}
+
+@function str-split($string, $separator) {
+  // empty array/list
+  $split-arr: ();
+  // first index of separator in string
+  $index : str-index($string, $separator);
+  // loop through string
+  @while $index != null {
+    // get the substring from the first character to the separator
+    $item: str-slice($string, 1, $index - 1);
+    // push item to array
+    $split-arr: append($split-arr, $item);
+    // remove item and separator from string
+    $string: str-slice($string, $index + 1);
+    // find new index of separator
+    $index : str-index($string, $separator);
+  }
+  // add the remaining string to list (the last item)
+  $split-arr: append($split-arr, $string);
+
+  @return $split-arr;
+}
+
+@function get-css-var($var1) {
+  $var1string: str-remove-whitespace(quote($var1));
 
   @if (str-index($string: $var1string, $substring: "var(--") == 1) {
     $color-var: unquote(str-slice($var1string, 5, str-length($var1string) - 1));
+    @return $color-var;
+  }
+
+  @if (str-index($string: $var1string, $substring: "hsla(var(--") == 1) {
+
+    $splitted: str-split($var1string, ",");
+    $var1string: nth($splitted, 2);
+
+    $alpha: nth($splitted, 4);
+    $alpha: str-slice($alpha, 0, str-length($alpha) - 1);
+    $alpha: unquote($alpha);
+
+    $color-var: unquote(str-slice($var1string, 5, str-length($var1string) - 3));
+
+    @return $color-var, $alpha;
+  }
+
+  @return none;
+}
+
+@function lighten($var1, $var2) {
+  $css-var-res: get-css-var($var1);
+  $color-var: nth($css-var-res, 1);
+  $length: length($css-var-res);
+
+  @if ($color-var != none) {
+    @if ($length > 1) {
+      $alpha: nth($css-var-res, 2);
+      @return hsla(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) + #{$var2}), $alpha);
+    }
+
     @return hsl(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) + #{$var2}));
   }
 
-  @return var1;
+  @return $var1;
 }
 
 @function darken($var1, $var2) {
-  $var1string: quote($var1);
+  $css-var-res: get-css-var($var1);
+  $color-var: nth($css-var-res, 1);
+  $length: length($css-var-res);
 
-  @if (str-index($string: $var1string, $substring: "var(--") == 1) {
-    $color-var: unquote(str-slice($var1string, 5, str-length($var1string) - 1));
+  @if ($color-var != none) {
+    @if ($length > 1) {
+      $alpha: nth($css-var-res, 2);
+      @return hsla(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) - #{$var2}), $alpha);
+    }
+
     @return hsl(var(#{$color-var}-h), var(#{$color-var}-s), calc(var(#{$color-var}-l) - #{$var2}));
   }
 
-  @return var1;
+  @return $var1;
 }
 
 @function fade-in($var1, $var2) {
   @return $var1;
 }
 
-@function mix($var1, $var2, $var3) {
+@function rgba($var1, $var2, $var3: 255, $var4: 1) {
+  $color-var: get-css-var($var1);
+
+  @if ($color-var != none) {
+    @return hsla(var(#{$color-var}-h), var(#{$color-var}-s), var(#{$color-var}-l), $var2);
+  }
+
   @return $var1;
 }
 
+@function mix($var1, $var2, $var3) {
+  $color-var: get-css-var($var2);
+  @if ($color-var != none) {
+    @return hsla(var(#{$color-var}-h), var(#{$color-var}-s), var(#{$color-var}-l), 1 - ($var3 / 100%));
+  }
+
+  @return $var2;
+}
+
 @function red($var1) {
-  @return 255;
+  @return 0;
 }
 
 @function green($var1) {
@@ -37,8 +119,16 @@
 }
 
 @function blue($var1) {
-  @return 255;
+  @return 0;
 }
+
+// @function theme-color-level($color-name: "primary", $level: 0) {
+//   $color: theme-color($color-name);
+//   $color-base: if($level > 0, $black, $white);
+//   $level: abs($level);
+
+//   @return mix($color-base, $color, $level * $theme-color-interval);
+// }
 
 $white:    hsl(0, 0%, 100%);
 $gray-100: hsl(210, 17%, 98%);
@@ -53,15 +143,15 @@ $gray-900: hsl(210, 11%, 15%);
 $black:    hsl(0, 0%, 0%);
 
 $blue:    hsl(211, 100%, 50%);
-$indigo:  #6610f2;
-$purple:  #6f42c1;
-$pink:    #e83e8c;
-$red:     #dc3545;
-$orange:  #fd7e14;
-$yellow:  #ffc107;
-$green:   #28a745;
-$teal:    #20c997;
-$cyan:    #17a2b8;
+$indigo:  hsl(263, 90%, 51%);
+$purple:  hsl(261, 51%, 51%);
+$pink:    hsl(332, 79%, 58%);
+$red:     hsl(354, 70%, 54%);
+$orange:  hsl(27, 98%, 54%);
+$yellow:  hsl(45, 100%, 51%);
+$green:   hsl(134, 61%, 41%);
+$teal:    hsl(162, 73%, 46%);
+$cyan:    hsl(188, 78%, 41%);
 
 body{
   --white-h: 0;
@@ -119,14 +209,62 @@ body{
   --black-l: 0%;
   --black: hsl(var(--black-h), var(--black-s), var(--black-l));
 
+  /* --- */
+
   --blue-h: 211;
   --blue-s: 100%;
   --blue-l: 50%;
-  --blue: hsl(var(--blue-h), var(--blue-s), var(--blue-l));
+  --blue: hsl(var(--blue-h), var(--blue-s), var(--blue-l));        
+
+  --indigo-h: 263;
+  --indigo-s: 90%;
+  --indigo-l: 51%;
+  --indigo: hsl(var(--indigo-h), var(--indigo-s), var(--indigo-l));
+
+  --purple-h: 261;
+  --purple-s: 51%;
+  --purple-l: 51%;
+  --purple: hsl(var(--purple-h), var(--purple-s), var(--purple-l));
+
+  --pink-h: 332;
+  --pink-s: 79%;
+  --pink-l: 58%;
+  --pink: hsl(var(--pink-h), var(--pink-s), var(--pink-l));
+
+  --red-h: 354;
+  --red-s: 70%;
+  --red-l: 54%;
+  --red: hsl(var(--red-h), var(--red-s), var(--red-l));
+
+  --orange-h: 27;
+  --orange-s: 98%;
+  --orange-l: 54%;
+  --orange: hsl(var(--orange-h), var(--orange-s), var(--orange-l));
+
+  --yellow-h: 45;
+  --yellow-s: 100%;
+  --yellow-l: 51%;
+  --yellow: hsl(var(--yellow-h), var(--yellow-s), var(--yellow-l));
+
+  --green-h: 134;
+  --green-s: 61%;
+  --green-l: 41%;
+  --green: hsl(var(--green-h), var(--green-s), var(--green-l));
+
+  --teal-h: 162;
+  --teal-s: 73%;
+  --teal-l: 46%;
+  --teal: hsl(var(--teal-h), var(--teal-s), var(--teal-l));
+
+  --cyan-h: 188;
+  --cyan-s: 78%;
+  --cyan-l: 41%;
+  --cyan: hsl(var(--cyan-h), var(--cyan-s), var(--cyan-l));
 }
 
 body.dark {
-  --white: #{$black};
+  --white-l: 0%;
+
   --gray-100: #{$gray-900};
   --gray-200: #{$gray-800};
   --gray-300: #{$gray-700};
@@ -139,7 +277,16 @@ body.dark {
   
   --black-l: 100%;
 
+  /* Add 20% lightning to each color */
   --blue-l: 70%;
+  --indigo-l: 71%;
+  --pink-l: 78%;
+  --red-l: 74%;
+  --orange-l: 74%;
+  --yellow-l: 74%;
+  --green-l: 61%;
+  --teal-l: 66%;
+  --cyan-l: 61%;
 }
 
 $white: var(--white);
@@ -155,6 +302,17 @@ $gray-900: var(--gray-900);
 $black: var(--black);
 
 $blue: var(--blue);
+$indigo: var(--indigo);
+$purple: var(--purple);
+$pink: var(--pink);
+$red: var(--red);
+$orange: var(--orange);
+$yellow: var(--yellow);
+$green: var(--green);
+$teal: var(--teal);
+$cyan: var(--cyan);
 
 $card-border-color: hsla(var(--black-h), var(--black-s), var(--blue-l), .125);
 $card-cap-bg: hsla(var(--black-h), var(--black-s), var(--blue-l), .03);
+
+$alert-color-level: 0;
